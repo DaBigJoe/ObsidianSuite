@@ -40,7 +40,7 @@ public class EntitySetupParentingPanel extends JPanel
 			{
 				for (PartObj partObj : controller.getEntityModel().getPartObjs())
 				{
-					controller.getEntityModel().setParent(partObj, null, false);
+					controller.getEntityModel().setParent(partObj, null);
 					partObj.getChildren().clear();
 				}
 				refreshScrollPane();

@@ -42,4 +42,5 @@ public class Face
 
         return new Vertex((float) normalVector.x, (float) normalVector.y, (float) normalVector.z);
     }
+
 }

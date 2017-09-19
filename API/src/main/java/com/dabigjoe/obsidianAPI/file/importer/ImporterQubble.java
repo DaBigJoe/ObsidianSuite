@@ -140,7 +140,7 @@ public class ImporterQubble implements ModelImporter
 					for (QubbleCuboid cube : cuboid.getChildren())
 					{
 						PartObj child = model.getPartObjFromName(cube.getName());
-						model.setParent(child, parent, false);
+						model.setParent(child, parent);
 					}
 				}
 			}

@@ -89,7 +89,7 @@ public class AnimationParenting
 				}
 				PartObj child = model.getPartObjFromName(name);
 
-				model.setParent(child, parent, hasBend);
+				model.setParent(child, parent);
 				j++;
 			}
 			

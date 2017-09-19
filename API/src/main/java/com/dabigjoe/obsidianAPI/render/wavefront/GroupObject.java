@@ -1,12 +1,10 @@
 package com.dabigjoe.obsidianAPI.render.wavefront;
 
 import java.util.ArrayList;
-
-import org.lwjgl.opengl.GL11;
+import java.util.List;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -53,5 +51,37 @@ public class GroupObject
                 face.render(renderer);
             }
         }
+    }
+    
+    public List<Vertex> getIntersectingVertices(GroupObject obj) {
+    	List<Vertex> intersectingVertices = new ArrayList<Vertex>();
+    	List<Vertex> allVertices1 = getAllVertices();
+    	List<Vertex> allVertices2 = obj.getAllVertices();
+    	for(Vertex v : allVertices1) {
+        	for(Vertex w : allVertices2) {
+        		if(v.isEquivalent(w)) {
+        			System.out.println(v);
+        			intersectingVertices.add(v);
+        		}
+        	}
+    	}
+    	return intersectingVertices;
+    }
+    
+    private List<Vertex> getAllVertices() {
+    	List<Vertex> allVertices = new ArrayList<Vertex>();
+    	for(Face f : faces) {
+    		for(Vertex v : f.vertices) {
+    			//Check for duplicates and add if unique.
+    			boolean add = true;
+    			for(Vertex w : allVertices) {
+    				if(v.isEquivalent(w))
+    					add = false;
+    			}
+    			if(add)
+    				allVertices.add(v);
+    		}
+    	}
+    	return allVertices;
     }
 }

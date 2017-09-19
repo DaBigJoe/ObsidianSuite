@@ -48,6 +48,9 @@ public class EntitySetupGui extends GuiEntityRenderer
 					controller.getEntityModel().runMerge();
 					controller.refresh();
 				}
+				else if(isCtrlKeyDown()) {
+					controller.attemptCreateBend(selectedPartObj, hoveredPartObj);
+				}
 				else 
 					controller.attemptParent(selectedPartObj, hoveredPartObj);
 			}

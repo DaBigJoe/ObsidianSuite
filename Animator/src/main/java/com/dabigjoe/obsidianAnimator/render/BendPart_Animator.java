@@ -1,7 +1,7 @@
 package com.dabigjoe.obsidianAnimator.render;
 
 import com.dabigjoe.obsidianAPI.render.ModelObj;
-import com.dabigjoe.obsidianAPI.render.bend.BendPart;
+import com.dabigjoe.obsidianAPI.render.bend.BendPartOld;
 import com.dabigjoe.obsidianAPI.render.bend.PartUVMap;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
 import com.dabigjoe.obsidianAPI.render.wavefront.TextureCoordinate;
@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class BendPart_Animator extends BendPart
+public class BendPart_Animator extends BendPartOld
 {
     public BendPart_Animator(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
     {

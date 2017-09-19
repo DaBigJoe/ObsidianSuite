@@ -13,14 +13,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class BendPart extends GroupObject
+public class BendPartOld extends GroupObject
 {
 
     //Sets of four vertices for the top and bottom of the sections.
     protected List<TextureCoordinate[]> faceTextureCoords;
     private boolean inverted;
 
-    public BendPart(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
+    public BendPartOld(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
     {
         super("", 4);
         this.inverted = inverted;

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.dabigjoe.obsidianAPI.render.bend.Bend;
-import com.dabigjoe.obsidianAPI.render.bend.BendPart;
+import com.dabigjoe.obsidianAPI.render.bend.BendOld;
+import com.dabigjoe.obsidianAPI.render.bend.BendPartOld;
 import com.dabigjoe.obsidianAPI.render.bend.PartUVMap;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
@@ -15,7 +15,7 @@ import com.dabigjoe.obsidianAnimator.render.entity.ModelObj_Animator;
 
 import net.minecraft.entity.Entity;
 
-public class Bend_Animator extends Bend
+public class Bend_Animator extends BendOld
 {
     public Bend_Animator(PartObj parent, PartObj child)
     {
@@ -23,22 +23,22 @@ public class Bend_Animator extends Bend
     }
 
     @Override
-    protected BendPart createBendPart(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
+    protected BendPartOld createBendPart(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
     {
         return new BendPart_Animator(topVertices, bottomVertices, uvMap, inverted);
     }
 
-    private List<BendPart> getParentBendParts()
+    private List<BendPartOld> getParentBendParts()
     {
-        List<BendPart> parentBendParts = new ArrayList<BendPart>();
+        List<BendPartOld> parentBendParts = new ArrayList<BendPartOld>();
         for (int i = 0; i < bendSplit / 2; i++)
             parentBendParts.add(bendParts.get(i));
         return parentBendParts;
     }
 
-    private List<BendPart> getChildBendParts()
+    private List<BendPartOld> getChildBendParts()
     {
-        List<BendPart> childBendParts = new ArrayList<BendPart>();
+        List<BendPartOld> childBendParts = new ArrayList<BendPartOld>();
         for (int i = bendSplit / 2; i < bendSplit; i++)
             childBendParts.add(bendParts.get(i));
         return childBendParts;
@@ -73,10 +73,10 @@ public class Bend_Animator extends Bend
      *
      * @return - Minimum distance from p0 to part, null if no intersect exists.
      */
-    private Double testRay(RayTrace ray, List<BendPart> bendParts)
+    private Double testRay(RayTrace ray, List<BendPartOld> bendParts)
     {
         Double min = null;
-        for (BendPart bendPart : bendParts)
+        for (BendPartOld bendPart : bendParts)
         {
             for (Face f : bendPart.faces)
             {
@@ -98,7 +98,7 @@ public class Bend_Animator extends Bend
         //Actually render all the bend parts.
         for (int i = 0; i < bendSplit; i++)
         {
-            BendPart part = bendParts.get(i);
+            BendPartOld part = bendParts.get(i);
             boolean mainHighlight = false;
             boolean otherHighlight = false;
             if (parent.modelObj instanceof ModelObj_Animator)

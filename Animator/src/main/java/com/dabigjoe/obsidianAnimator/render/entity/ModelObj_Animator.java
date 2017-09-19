@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dabigjoe.obsidianAPI.render.ModelObj;
-import com.dabigjoe.obsidianAPI.render.bend.Bend;
+import com.dabigjoe.obsidianAPI.render.bend.BendOld;
 import com.dabigjoe.obsidianAPI.render.part.Part;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
@@ -36,7 +36,7 @@ public class ModelObj_Animator extends ModelObj
 	}
 
 	@Override
-	protected Bend createBend(PartObj parent, PartObj child)
+	protected BendOld createBend(PartObj parent, PartObj child)
 	{
 		return new Bend_Animator(parent, child);
 	}
@@ -65,26 +65,26 @@ public class ModelObj_Animator extends ModelObj
 				}
 			}
 		}
-		for (Bend bend : bends)
-		{
-			if (bend instanceof Bend_Animator)
-			{
-				Bend_Animator b = (Bend_Animator) bend;
-
-				Double d = b.testRayChild();
-				if (d != null && (min == null || d < min))
-				{
-					closestPart = bend.child;
-					min = d;
-				}
-				Double d2 = b.testRayParent();
-				if (d2 != null && (min == null || d2 < min))
-				{
-					closestPart = bend.parent;
-					min = d2;
-				}
-			}
-		}
+//		for (BendOld bend : bends)
+//		{
+//			if (bend instanceof Bend_Animator)
+//			{
+//				Bend_Animator b = (Bend_Animator) bend;
+//
+//				Double d = b.testRayChild();
+//				if (d != null && (min == null || d < min))
+//				{
+//					closestPart = bend.child;
+//					min = d;
+//				}
+//				Double d2 = b.testRayParent();
+//				if (d2 != null && (min == null || d2 < min))
+//				{
+//					closestPart = bend.parent;
+//					min = d2;
+//				}
+//			}
+//		}
 
 		return closestPart;
 	}

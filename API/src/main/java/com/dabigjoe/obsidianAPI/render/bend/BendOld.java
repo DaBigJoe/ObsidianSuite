@@ -11,7 +11,7 @@ import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 import net.minecraft.entity.Entity;
 
 
-public class Bend
+public class BendOld
 {
 
     //Rotation point of child is the centre of the bend.
@@ -32,7 +32,7 @@ public class Bend
     private static final float sizeReduction = 0.2F;
 
     //The list of segments of the bend. These are the actual group objects that are rendered.
-    protected List<BendPart> bendParts;
+    protected List<BendPartOld> bendParts;
     //The number of bend parents the bend is made up of.
     //Min 5, max 40
     protected static final int bendSplit = 20;
@@ -42,13 +42,13 @@ public class Bend
 
     private PartUVMap parentUvMap, childUvMap;
 
-    public Bend(PartObj parent, PartObj child)
+    public BendOld(PartObj parent, PartObj child)
     {
         this.parent = parent;
         this.child = child;
 
         centreOfBend = new Vertex(-child.getRotationPoint(0), -child.getRotationPoint(1), -child.getRotationPoint(2));
-        bendParts = new ArrayList<BendPart>();
+        bendParts = new ArrayList<BendPartOld>();
         parentUvMap = new PartUVMap(parent);
         childUvMap = new PartUVMap(child);
 
@@ -170,9 +170,9 @@ public class Bend
         }
     }
 
-    protected BendPart createBendPart(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
+    protected BendPartOld createBendPart(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
     {
-        return new BendPart(topVertices, bottomVertices, uvMap, inverted);
+        return new BendPartOld(topVertices, bottomVertices, uvMap, inverted);
     }
 
     public void move()
@@ -250,7 +250,7 @@ public class Bend
         //Actually render all the bend parts.
         for (int i = 0; i < bendSplit; i++)
         {
-            BendPart part = bendParts.get(i);
+            BendPartOld part = bendParts.get(i);
             part.updateTextureCoordinates(entity, false, false, parent.modelObj);
             part.render();
         }

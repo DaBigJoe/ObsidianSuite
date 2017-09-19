@@ -8,7 +8,8 @@ import java.util.Set;
 import org.lwjgl.opengl.GL11;
 
 import com.dabigjoe.obsidianAPI.render.ModelObj;
-import com.dabigjoe.obsidianAPI.render.bend.Bend;
+import com.dabigjoe.obsidianAPI.render.bend.BendOld;
+import com.dabigjoe.obsidianAPI.render.part.bend.Bend;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
 import com.dabigjoe.obsidianAPI.render.wavefront.TextureCoordinate;
@@ -17,7 +18,6 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3d;
 
 /**
  * One partObj for each 'part' of the model.
@@ -87,12 +87,12 @@ public class PartObj extends PartRotation
 
 	public void removeBend()
 	{
-		if (bend != null)
-		{
-			modelObj.removeBend(bend);
-			bend.remove();
-			bend = null;
-		}
+//		if (bend != null)
+//		{
+//			modelObj.removeBend(bend);
+//			bend.remove();
+//			bend = null;
+//		}
 	}
 	
 	public void addMergedPart(PartObj part) {
@@ -213,6 +213,8 @@ public class PartObj extends PartRotation
 		updateTextureCoordinates(entity);
 		move();
 		groupObj.render();
+		if(bend != null)
+			bend.render();
 		
 		//Do for children - rotation for parent compensated for!
         for (PartObj child : getChildren())

@@ -89,7 +89,7 @@ public class ImporterTabula implements ModelImporter {
 				PartObj parent = model.getPartObjFromName(box.name);
 				for(CubeInfo cube : box.cube.children) {
 					PartObj child = model.getPartObjFromName(cube.name);
-					model.setParent(child, parent, false);
+					model.setParent(child, parent);
 				}
 			}
 		}

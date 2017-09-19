@@ -13,10 +13,11 @@ import org.lwjgl.opengl.GL11;
 import com.dabigjoe.obsidianAPI.animation.AnimationParenting;
 import com.dabigjoe.obsidianAPI.animation.PartGroups;
 import com.dabigjoe.obsidianAPI.file.PartData;
-import com.dabigjoe.obsidianAPI.render.bend.Bend;
+import com.dabigjoe.obsidianAPI.render.bend.BendOld;
 import com.dabigjoe.obsidianAPI.render.part.Part;
 import com.dabigjoe.obsidianAPI.render.part.PartEntityPos;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
+import com.dabigjoe.obsidianAPI.render.part.bend.Bend;
 import com.dabigjoe.obsidianAPI.render.part.prop.PartPropRotation;
 import com.dabigjoe.obsidianAPI.render.part.prop.PartPropScale;
 import com.dabigjoe.obsidianAPI.render.part.prop.PartPropTranslation;
@@ -32,7 +33,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 
 public class ModelObj extends ModelBase {
 
@@ -40,7 +40,6 @@ public class ModelObj extends ModelBase {
 	public final WavefrontObject obj;
 	private ResourceLocation texture;
 	public List<Part> parts;
-	protected List<Bend> bends = new ArrayList<Bend>();
 	public PartGroups partGroups;
 	private Map<PartObj, float[]> defaults;
 	private float modelScaleX, modelScaleY, modelScaleZ;
@@ -217,23 +216,7 @@ public class ModelObj extends ModelBase {
 	// Parenting
 	// ----------------------------------------------------------------
 
-	public void setParent(PartObj child, @Nullable PartObj parent, boolean addBend) {
-		
-		if (addBend) {
-			for (Part p : parts) {
-				if (p instanceof PartObj) {
-					PartObj obj = (PartObj) p;
-					obj.updateTextureCoordinates(null, false, false, false);
-				}
-			}
-
-			if (!child.hasBend()) {
-				Bend b = createBend(parent, child);
-				bends.add(b);
-				child.setBend(b);
-			}
-		}
-
+	public void setParent(PartObj child, @Nullable PartObj parent) {
 		if (child.hasParent())
 			child.getParent().removeChild(child);
 
@@ -245,20 +228,27 @@ public class ModelObj extends ModelBase {
 		}
 	}
 	
+	public void setBend(PartObj child, PartObj bend) {
+		if(!child.hasParent())
+			return;
+		
+		bend.updateTextureCoordinates(null, false, false, false);
+		PartObj parent = child.getParent();
+		parent.setBend(new Bend(parent, child, bend.groupObj));
+		removeParenting(bend);
+		parts.remove(bend);
+	}
+	
 	private void removeParenting(PartObj child) {
 		PartObj parent = child.getParent();
 		if(parent != null) {
 			parent.getChildren().remove(child);
-			setParent(child, null, false);
+			setParent(child, null);
 		}
 	}
 
-	protected Bend createBend(PartObj parent, PartObj child) {
-		return new Bend(parent, child);
-	}
-
-	public void removeBend(Bend bend) {
-		bends.remove(bend);
+	protected BendOld createBend(PartObj parent, PartObj child) {
+		return new BendOld(parent, child);
 	}
 
 	public void runMerge() {
@@ -305,7 +295,7 @@ public class ModelObj extends ModelBase {
 			while (parent.isMerged()) {
 				parent = parent.getParent();
 			}
-			setParent(part, parent, false);
+			setParent(part, parent);
 		}
 	}
 
@@ -320,7 +310,7 @@ public class ModelObj extends ModelBase {
 
 	public void addMerge(PartObj part, PartObj partToMerge) {
 		if(partToMerge.getParent() != part)
-			setParent(partToMerge, part, false);
+			setParent(partToMerge, part);
 		part.addMergedPart(partToMerge);
 	}
 	
@@ -370,9 +360,9 @@ public class ModelObj extends ModelBase {
 			// ((PartEntityPos) p).move(entity);
 		}
 
-		for (Bend bend : bends) {
-			bend.render(entity);
-		}
+//		for (Bend bend : bends) {
+//			bend.render(entity);
+//		}
 
 		GL11.glPopMatrix();
 	}

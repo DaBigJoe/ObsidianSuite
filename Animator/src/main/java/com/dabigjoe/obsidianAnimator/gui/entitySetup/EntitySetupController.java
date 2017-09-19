@@ -67,9 +67,12 @@ public class EntitySetupController
 //		int n = JOptionPane.showOptionDialog(frame, "Add bend?", "Bend",
 //											 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null, options, options[1]);
 //		boolean bend = n == 0;
-		boolean bend = false;
-		getEntityModel().setParent(child, parent, bend);
+		getEntityModel().setParent(child, parent);
 		refresh();
+	}
+	
+	public void attemptCreateBend(PartObj child, PartObj bend) {
+		getEntityModel().setBend(child, bend);
 	}
 	
 	public void refresh() {
