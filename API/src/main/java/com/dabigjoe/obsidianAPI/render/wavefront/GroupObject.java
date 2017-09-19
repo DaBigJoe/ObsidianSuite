@@ -53,19 +53,32 @@ public class GroupObject
         }
     }
     
+    /**
+     * Return the list of vertices in this group object that are
+     * also in the given group object. 
+     */
     public List<Vertex> getIntersectingVertices(GroupObject obj) {
     	List<Vertex> intersectingVertices = new ArrayList<Vertex>();
     	List<Vertex> allVertices1 = getAllVertices();
     	List<Vertex> allVertices2 = obj.getAllVertices();
     	for(Vertex v : allVertices1) {
         	for(Vertex w : allVertices2) {
-        		if(v.isEquivalent(w)) {
-        			System.out.println(v);
+        		if(v.isEquivalent(w))
         			intersectingVertices.add(v);
-        		}
         	}
     	}
     	return intersectingVertices;
+    }
+    
+    /**
+     * Return the list of vertices in this group object that are
+     * also in the given group object. 
+     */
+    public List<Vertex> getNonIntersectingVertices(GroupObject obj) {
+    	List<Vertex> nonIntersectingVertices = getAllVertices();
+    	nonIntersectingVertices.removeAll(getIntersectingVertices(obj));
+    	System.out.println(nonIntersectingVertices.size());
+    	return nonIntersectingVertices;
     }
     
     private List<Vertex> getAllVertices() {
@@ -84,4 +97,13 @@ public class GroupObject
     	}
     	return allVertices;
     }
+
+	public List<TextureCoordinate[]> getRescaledTextureCoords(List<Vertex> nearVertices, List<Vertex> farVertices) {
+		List<TextureCoordinate[]> rescaledTextCoords = new ArrayList<TextureCoordinate[]>();
+		for(Face f : faces) {
+			rescaledTextCoords.add(f.textureCoordinates);
+		}
+		return rescaledTextCoords;
+	}
+    
 }

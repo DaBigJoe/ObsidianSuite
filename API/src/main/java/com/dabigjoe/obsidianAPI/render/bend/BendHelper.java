@@ -43,27 +43,32 @@ public class BendHelper
         return partVertices.toArray(new Vertex[8]);
     }
 
-    /**
-     * Aligns two sets of vertices so that vertexA[0] is closest to vertexB[0].
-     * Explanation: http://imgur.com/Y7LbjQP
-     *
-     * @param fixed    - This set of vertices will remain as they are.
-     * @param vertices - This set of vertices is the set to be aligned.
-     * @return - The vertices set, but aligned to the fixed set.
-     */
-    public static Vertex[] alignVertices(Vertex[] fixed, Vertex[] vertices)
+
+    public static List<Vertex> alignVertices(List<Vertex> fixed, List<Vertex> vertices)
     {
-        Vertex[] alignedVertices = new Vertex[fixed.length];
-        for (int i = 0; i < fixed.length; i++)
-        {
-            Vertex v = fixed[i];
-            //Vertex that corresponds to v is the closest one.
-            alignedVertices[i] = orderVerticesOnDistance(vertices, v)[0];
-        }
+        List<Vertex> alignedVertices = new ArrayList<Vertex>();
+        for (Vertex v : fixed)
+            alignedVertices.add(getClosestVertex(v, vertices));
+        vertices.clear();
+        vertices.addAll(alignedVertices);
         return alignedVertices;
     }
 
-    /**
+    private static Vertex getClosestVertex(Vertex v, List<Vertex> vertices) {
+    	Double min = null;
+    	Vertex closest = null;
+    	for(Vertex w : vertices) {
+    		double f = v.distanceTo(w);
+    		if(min == null || f < min) {
+    			min = f;
+    			closest = w;
+    		}
+    	}
+    	return closest;
+	}
+
+
+	/**
      * Orders the vertices in a relative fashion. Each consecutive vertex should
      * only change in one dimension from the previous vertex.
      * FIXME This assumes all vertices have the same y value, so we are only comparing x and z values.
@@ -123,13 +128,13 @@ public class BendHelper
     /**
      * Rotate a vertex by a given rotation around a given rotation point.
      */
-    public static void rotateVertex(Vertex v, float[] rotationMatrix, Vertex rotationPoint)
-    {
-        float[] vector = new float[] {v.x - rotationPoint.x, v.y - rotationPoint.y, v.z - rotationPoint.z};
+    public static void rotateVertex(Vertex in, float[] rotationMatrix, Vertex rotationPoint)
+    {    	    	
+        float[] vector = new float[] {in.x - rotationPoint.x, in.y - rotationPoint.y, in.z - rotationPoint.z};
 
-        v.x = vector[0] * rotationMatrix[0] + vector[1] * rotationMatrix[3] + vector[2] * rotationMatrix[6] + rotationPoint.x;
-        v.y = vector[0] * rotationMatrix[1] + vector[1] * rotationMatrix[4] + vector[2] * rotationMatrix[7] + rotationPoint.y;
-        v.z = vector[0] * rotationMatrix[2] + vector[1] * rotationMatrix[5] + vector[2] * rotationMatrix[8] + rotationPoint.z;
+        in.x = vector[0] * rotationMatrix[0] + vector[1] * rotationMatrix[3] + vector[2] * rotationMatrix[6] + rotationPoint.x;
+        in.y = vector[0] * rotationMatrix[1] + vector[1] * rotationMatrix[4] + vector[2] * rotationMatrix[7] + rotationPoint.y;
+        in.z = vector[0] * rotationMatrix[2] + vector[1] * rotationMatrix[5] + vector[2] * rotationMatrix[8] + rotationPoint.z;
     }
 
     /**

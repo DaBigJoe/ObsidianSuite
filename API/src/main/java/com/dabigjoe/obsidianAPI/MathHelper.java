@@ -1,5 +1,7 @@
 package com.dabigjoe.obsidianAPI;
 
+import net.minecraft.util.math.Vec3d;
+
 public class MathHelper {
 	
     /**
@@ -39,6 +41,20 @@ public class MathHelper {
 		float m8 = (float) (cx * cy);
 
 		return new float[] {m0, m1, m2, m3, m4, m5, m6, m7, m8};
+	}
+	
+	
+	/**
+	 * Line l = u + t*v. Return value of t that gives closest point to p.
+	 * @param u - Point on line.
+	 * @param v - Direction of line.
+	 * @param p - Test point.
+	 * @return t
+	 */
+	public static Double getLineScalarForClosestPoint(Vec3d u, Vec3d v, Vec3d p)
+	{
+		//System.out.println(v.dotProduct(v));
+		return v.dotProduct(p.subtract(u))/v.dotProduct(v);
 	}
 
 }

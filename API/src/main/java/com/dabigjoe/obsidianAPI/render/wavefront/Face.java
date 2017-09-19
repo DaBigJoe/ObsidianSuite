@@ -23,12 +23,17 @@ public class Face
         renderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
         for (int i = 0; i < numVertices; ++i) {
     		Vertex v = vertices[i];
-    		TextureCoordinate tc = textureCoordinates[i];
+    		TextureCoordinate tc = new TextureCoordinate(0, 0);
+    		if(textureCoordinates != null && textureCoordinates[i] != null)
+    			tc = textureCoordinates[i];
             renderer.pos(v.x, v.y, v.z).tex(tc.u, tc.v).normal(faceNormal.x, faceNormal.y, faceNormal.z).endVertex();
         }
+		TextureCoordinate tc = new TextureCoordinate(0, 0);
+		if(textureCoordinates != null && textureCoordinates[0] != null)
+			tc = textureCoordinates[0];
         //Renderer works with four vertices so add start point again if face is only three vertices.
         if(numVertices == 3)
-        	renderer.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(textureCoordinates[0].u, textureCoordinates[0].v).normal(faceNormal.x, faceNormal.y, faceNormal.z).endVertex();
+        	renderer.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(tc.u, tc.v).normal(faceNormal.x, faceNormal.y, faceNormal.z).endVertex();
         
         Tessellator.getInstance().draw();
     }

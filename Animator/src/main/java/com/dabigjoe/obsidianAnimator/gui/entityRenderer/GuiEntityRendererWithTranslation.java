@@ -14,10 +14,6 @@ import com.dabigjoe.obsidianAnimator.data.ModelHandler;
 import com.dabigjoe.obsidianAnimator.render.MathHelper;
 import com.dabigjoe.obsidianAnimator.render.RayTrace;
 
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 
@@ -139,7 +135,7 @@ public class GuiEntityRendererWithTranslation extends GuiEntityRendererWithRotat
 			case 2: v = new Vec3d(0, 0, 1); break; 
 			}
 			if(translationGuidePoint != null)
-				prevTranslationDelta = MathHelper.getLineScalarForClosestPoint(new Vec3d(0, 0, 0), v, translationGuidePoint);
+				prevTranslationDelta = com.dabigjoe.obsidianAPI.MathHelper.getLineScalarForClosestPoint(new Vec3d(0, 0, 0), v, translationGuidePoint);
 			GL11.glPopMatrix();
 		}
 		else
@@ -191,7 +187,7 @@ public class GuiEntityRendererWithTranslation extends GuiEntityRendererWithRotat
 			case 2: v = new Vec3d(0, 0, 1); break; 
 			}
 
-			double translationDelta = MathHelper.getLineScalarForClosestPoint(new Vec3d(0, 0, 0), v, translationGuidePoint);
+			double translationDelta = com.dabigjoe.obsidianAPI.MathHelper.getLineScalarForClosestPoint(new Vec3d(0, 0, 0), v, translationGuidePoint);
 			double d = translationDelta - prevTranslationDelta;
 			if(!Double.isNaN(d))
 			{

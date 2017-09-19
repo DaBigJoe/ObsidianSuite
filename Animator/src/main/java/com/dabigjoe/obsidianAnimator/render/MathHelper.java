@@ -4,17 +4,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
-import com.dabigjoe.obsidianAPI.render.wavefront.TextureCoordinate;
-import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 
 public class MathHelper 
@@ -101,7 +94,7 @@ public class MathHelper
 		Vec3d pI = getRayPlaneIntersection(ray,p,n);
 		if(pI == null)
 			return null;
-		double t = getLineScalarForClosestPoint(new Vec3d(0, 0, 0), p, pI);
+		double t = com.dabigjoe.obsidianAPI.MathHelper.getLineScalarForClosestPoint(new Vec3d(0, 0, 0), p, pI);
 		double d;
 		if(t < 0)
 			d = pI.lengthVector();
@@ -112,19 +105,6 @@ public class MathHelper
 		if(d < 0.05F)
 			return ray.p0.distanceTo(pI);
 		return null;
-	}
-	
-	/**
-	 * Line l = u + t*v. Return value of t that gives closest point to p.
-	 * @param u - Point on line.
-	 * @param v - Direction of line.
-	 * @param p - Test point.
-	 * @return t
-	 */
-	public static Double getLineScalarForClosestPoint(Vec3d u, Vec3d v, Vec3d p)
-	{
-		//System.out.println(v.dotProduct(v));
-		return v.dotProduct(p.subtract(u))/v.dotProduct(v);
 	}
 
 	/**
