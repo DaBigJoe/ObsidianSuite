@@ -1,7 +1,12 @@
 package com.dabigjoe.obsidianAPI.render.wavefront;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.dabigjoe.obsidianAPI.render.part.bend.UVMap;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -100,9 +105,85 @@ public class GroupObject
 
 	public List<TextureCoordinate[]> getRescaledTextureCoords(List<Vertex> nearVertices, List<Vertex> farVertices) {
 		List<TextureCoordinate[]> rescaledTextCoords = new ArrayList<TextureCoordinate[]>();
-		for(Face f : faces) {
-			rescaledTextCoords.add(f.textureCoordinates);
+		Map<Vertex, UVMap> mapsByNormal = new HashMap<Vertex, UVMap>();
+		
+		for(int i = 0; i < 4; i++) {
+			Face f = faces.get(i+1);			
+			System.out.println(f.faceNormal.x + " " + f.faceNormal.y + " " + f.faceNormal.z);
+			UVMap map = new UVMap(f);
+			mapsByNormal.put(f.faceNormal, map);
 		}
+		
+		for(int i = 0; i < 4; i++) {
+			int j = i == 3 ? 0 : i + 1;
+			
+			Vertex vA = nearVertices.get(i);
+            Vertex vB = nearVertices.get(j);
+            Vertex vC = farVertices.get(j);
+            Vertex vD = farVertices.get(i);
+            Face f = new Face();
+            f.vertices = new Vertex[] {vA, vB, vC, vD};
+            f.faceNormal = f.calculateFaceNormal();
+			
+			UVMap map = null;
+			boolean inverted = false;
+			for(Entry<Vertex, UVMap> entry : mapsByNormal.entrySet()) {
+				if(entry.getKey().isEquivalent(f.faceNormal))
+					map = entry.getValue();
+				else if(entry.getKey().isEquivalent(new Vertex(-f.faceNormal.x, -f.faceNormal.y, -f.faceNormal.z))) {
+					map = entry.getValue();
+					inverted = true;
+				}		
+			}
+			
+			if(map != null) {
+				TextureCoordinate[] tcs = new TextureCoordinate[4];
+				for(int k = 0; k < 4; k++)
+					tcs[k] = map.getCoord(f.vertices[k], inverted);
+				System.out.println("H");
+				System.out.println(tcs);
+				if(inverted) {
+					TextureCoordinate[] temp = new TextureCoordinate[]{tcs[1], tcs[0], tcs[3], tcs[2]};
+					tcs = temp;
+				}
+				System.out.println(tcs);
+				rescaledTextCoords.add(tcs);
+			}
+			else {
+				System.err.println("Could not reslace texture coordinates for normal " + f.faceNormal.x + " " + f.faceNormal.y + " " + f.faceNormal.z);
+				rescaledTextCoords.add(faces.get(i+1).textureCoordinates);
+			}
+			
+
+			
+			//For debugging incorrect texture coordinates.
+//			for(int j = 0; j < 4; j++) {
+//				TextureCoordinate tc = map.getCoord(f.vertices[j]);
+//				if(tc.u != f.textureCoordinates[j].u && tc.v != f.textureCoordinates[j].v) {
+//					System.out.println("Vertices");
+//					for(int k = 0; k < 4; k++)
+//						System.out.println(f.vertices[k].x + ", " + f.vertices[k].y + ", " + f.vertices[k].z);
+//					System.out.println("Actual tcs");
+//					for(int k = 0; k < 4; k++)
+//						System.out.println(f.textureCoordinates[k].u + ", " + f.textureCoordinates[k].v);
+//					System.out.println("Map tcs");
+//					for(int k = 0; k < 4; k++) {
+//						TextureCoordinate tc2 = map.getCoord(f.vertices[k]);
+//						System.out.println(tc2.u + ", " + tc2.v);
+//					}
+//					System.out.println("Normal: " + f.faceNormal.x + ", " + f.faceNormal.y + ", " + + f.faceNormal.z);
+//					break;
+//				}
+//				
+//			}
+		}
+//		
+//		rescaledTextCoords.clear();
+//		for(int i = 0; i < 4; i++) {
+//			Face f = faces.get(i+1);			
+//			rescaledTextCoords.add(f.textureCoordinates);
+//		}
+		
 		return rescaledTextCoords;
 	}
     

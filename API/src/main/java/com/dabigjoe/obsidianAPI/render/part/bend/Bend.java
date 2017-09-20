@@ -22,7 +22,6 @@ public class Bend {
     private List<Vertex> parentNearVertices, parentFarVertices, childNearVertices, childFarVertices;
     
     //The number of bend parents the bend is made up of.
-    //Min 5, max 40
     protected static final int bendSplit = 10;
     
     public Bend(PartObj parent, PartObj child, GroupObject bendGroupObject) {

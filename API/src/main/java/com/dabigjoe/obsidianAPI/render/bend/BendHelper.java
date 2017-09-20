@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
+import com.dabigjoe.obsidianAPI.render.wavefront.TextureCoordinate;
 import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 
 public class BendHelper
@@ -42,7 +43,6 @@ public class BendHelper
         }
         return partVertices.toArray(new Vertex[8]);
     }
-
 
     public static List<Vertex> alignVertices(List<Vertex> fixed, List<Vertex> vertices)
     {

@@ -3,7 +3,6 @@ package com.dabigjoe.obsidianAPI.render.part.bend;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dabigjoe.obsidianAPI.render.bend.BendHelper;
 import com.dabigjoe.obsidianAPI.render.bend.BezierCurve;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
@@ -17,6 +16,35 @@ public class BendPart extends GroupObject {
 	public BendPart(GroupObject bendGroupObject, List<Vertex> nearVertices, List<Vertex> farVertices) {
 		super("", 4);
 		this.faceTextureCoords = bendGroupObject.getRescaledTextureCoords(nearVertices, farVertices);
+		
+		
+//		for (int i = 0; i < 4; i++)
+//        {
+//            int j = i == 3 ? 0 : i + 1;
+//            Vertex vA = nearVertices.get(i);
+//            Vertex vB = nearVertices.get(j);
+//            Vertex vC = farVertices.get(j);
+//            Vertex vD = farVertices.get(i);
+//            Face f = new Face();
+//            f.vertices = new Vertex[] {vA, vB, vC, vD};
+//            f.faceNormal = f.calculateFaceNormal();
+//            faces.add(f);
+//        }
+//		
+//		
+//		
+//		System.out.println("Face");
+//		System.out.println(nearVertices.get(0).x + ", " + nearVertices.get(0).y + ", " + nearVertices.get(0).z);
+//		System.out.println(nearVertices.get(1).x + ", " + nearVertices.get(1).y + ", " + nearVertices.get(1).z);
+//		System.out.println(farVertices.get(1).x + ", " + farVertices.get(1).y + ", " + farVertices.get(1).z);
+//		System.out.println(farVertices.get(0).x + ", " + farVertices.get(0).y + ", " + farVertices.get(0).z);
+//		System.out.println("Normal");
+//		Face f = new Face();
+//        f.vertices = new Vertex[] {nearVertices.get(0), nearVertices.get(1), farVertices.get(1), farVertices.get(0)};
+//		System.out.println(f.calculateFaceNormal().x + ", " + f.calculateFaceNormal().y + ", " + f.calculateFaceNormal().z);
+//		System.out.println("Texture Coords");
+//		for(int i = 0; i < faceTextureCoords.get(1).length; i++)
+//			System.out.println(faceTextureCoords.get(1)[i].u + ", " + faceTextureCoords.get(1)[i].v);
 	}
 	
 	public void update(BezierCurve[] curves, float t1, float t2) {
@@ -35,13 +63,8 @@ public class BendPart extends GroupObject {
             Face f = new Face();
             f.vertices = new Vertex[] {vA, vB, vC, vD};
             f.faceNormal = f.calculateFaceNormal();
-            faces.add(f);
-        }
-        
-        for (int i = 1; i < 5; i++)
-        {
-            Face f = faces.get(i-1);
             f.textureCoordinates = faceTextureCoords.get(i);
+            faces.add(f);
         }
 	}
 	
