@@ -1,4 +1,4 @@
-package com.dabigjoe.obsidianAPI.render.bend;
+package com.dabigjoe.obsidianAPI.render.part.bend;
 
 import org.lwjgl.opengl.GL11;
 

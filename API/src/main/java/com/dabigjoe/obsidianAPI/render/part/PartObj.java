@@ -8,7 +8,6 @@ import java.util.Set;
 import org.lwjgl.opengl.GL11;
 
 import com.dabigjoe.obsidianAPI.render.ModelObj;
-import com.dabigjoe.obsidianAPI.render.bend.BendOld;
 import com.dabigjoe.obsidianAPI.render.part.bend.Bend;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
@@ -174,14 +173,9 @@ public class PartObj extends PartRotation
 			defaultTextureCoords.put(f, coordsToStore);
 		}
 	}
-
-	public void updateTextureCoordinates(Entity entity)
-	{
-		updateTextureCoordinates(entity, false, false, true);
-	}
 	
 	public void addFacesFromPart(PartObj part) {
-		part.updateTextureCoordinates(null, false, false, false);
+		part.updateTextureCoordinates(null, false);
 		groupObj.faces.addAll(part.groupObj.faces);
 		for(Face f : part.groupObj.faces) {
 			TextureCoordinate[] coordsToStore = new TextureCoordinate[f.textureCoordinates.length];
@@ -192,17 +186,13 @@ public class PartObj extends PartRotation
 			defaultTextureCoords.put(f, coordsToStore);
 		}
 	}
-
-	/**
-	 * Change the texture coordinates and texture if the part is highlighted.
-	 */
-	public void updateTextureCoordinates(Entity entity, boolean mainHighlight, boolean otherHighlight, boolean bindTexture)
+	
+	public void updateTextureCoordinates(Entity entity, boolean bindTexture)
 	{
 		if (bindTexture)
 			Minecraft.getMinecraft().getTextureManager().bindTexture(modelObj.getTexture(entity));
 
-		for (Face f : groupObj.faces)
-		{
+		for (Face f : groupObj.faces) {
 			f.textureCoordinates = defaultTextureCoords.get(f);
 		}
 	}
@@ -210,11 +200,11 @@ public class PartObj extends PartRotation
 	public void render(Entity entity)
 	{
 		GL11.glPushMatrix();
-		updateTextureCoordinates(entity);
+		updateTextureCoordinates(entity, true);
 		move();
 		groupObj.render();
 		if(bend != null)
-			bend.render();
+			bend.render(entity);
 		
 		//Do for children - rotation for parent compensated for!
         for (PartObj child : getChildren())

@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 import com.dabigjoe.obsidianAPI.animation.AnimationParenting;
 import com.dabigjoe.obsidianAPI.animation.PartGroups;
 import com.dabigjoe.obsidianAPI.file.PartData;
-import com.dabigjoe.obsidianAPI.render.bend.BendOld;
 import com.dabigjoe.obsidianAPI.render.part.Part;
 import com.dabigjoe.obsidianAPI.render.part.PartEntityPos;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
@@ -232,23 +231,19 @@ public class ModelObj extends ModelBase {
 		if(!child.hasParent())
 			return;
 		
-		bend.updateTextureCoordinates(null, false, false, false);
+		bend.updateTextureCoordinates(null, false);
 		PartObj parent = child.getParent();
 		parent.setBend(new Bend(parent, child, bend.groupObj));
 		removeParenting(bend);
 		parts.remove(bend);
 	}
 	
-	private void removeParenting(PartObj child) {
+	protected void removeParenting(PartObj child) {
 		PartObj parent = child.getParent();
 		if(parent != null) {
 			parent.getChildren().remove(child);
 			setParent(child, null);
 		}
-	}
-
-	protected BendOld createBend(PartObj parent, PartObj child) {
-		return new BendOld(parent, child);
 	}
 
 	public void runMerge() {

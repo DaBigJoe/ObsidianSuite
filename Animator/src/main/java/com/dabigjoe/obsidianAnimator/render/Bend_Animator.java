@@ -5,40 +5,34 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.dabigjoe.obsidianAPI.render.bend.BendOld;
-import com.dabigjoe.obsidianAPI.render.bend.BendPartOld;
-import com.dabigjoe.obsidianAPI.render.bend.PartUVMap;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
+import com.dabigjoe.obsidianAPI.render.part.bend.Bend;
+import com.dabigjoe.obsidianAPI.render.part.bend.BendPart;
 import com.dabigjoe.obsidianAPI.render.wavefront.Face;
+import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
 import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 import com.dabigjoe.obsidianAnimator.render.entity.ModelObj_Animator;
 
 import net.minecraft.entity.Entity;
 
-public class Bend_Animator extends BendOld
+public class Bend_Animator extends Bend
 {
-    public Bend_Animator(PartObj parent, PartObj child)
+    public Bend_Animator(PartObj parent, PartObj child, GroupObject bendGroupObject)
     {
-        super(parent, child);
+        super(parent, child, bendGroupObject);
     }
 
-    @Override
-    protected BendPartOld createBendPart(Vertex[] topVertices, Vertex[] bottomVertices, PartUVMap uvMap, boolean inverted)
+    private List<BendPart> getParentBendParts()
     {
-        return new BendPart_Animator(topVertices, bottomVertices, uvMap, inverted);
-    }
-
-    private List<BendPartOld> getParentBendParts()
-    {
-        List<BendPartOld> parentBendParts = new ArrayList<BendPartOld>();
+        List<BendPart> parentBendParts = new ArrayList<BendPart>();
         for (int i = 0; i < bendSplit / 2; i++)
             parentBendParts.add(bendParts.get(i));
         return parentBendParts;
     }
 
-    private List<BendPartOld> getChildBendParts()
+    private List<BendPart> getChildBendParts()
     {
-        List<BendPartOld> childBendParts = new ArrayList<BendPartOld>();
+        List<BendPart> childBendParts = new ArrayList<BendPart>();
         for (int i = bendSplit / 2; i < bendSplit; i++)
             childBendParts.add(bendParts.get(i));
         return childBendParts;
@@ -73,10 +67,10 @@ public class Bend_Animator extends BendOld
      *
      * @return - Minimum distance from p0 to part, null if no intersect exists.
      */
-    private Double testRay(RayTrace ray, List<BendPartOld> bendParts)
+    private Double testRay(RayTrace ray, List<BendPart> bendParts)
     {
         Double min = null;
-        for (BendPartOld bendPart : bendParts)
+        for (BendPart bendPart : bendParts)
         {
             for (Face f : bendPart.faces)
             {
@@ -87,30 +81,23 @@ public class Bend_Animator extends BendOld
         }
         return min;
     }
-
+    
     @Override
-    public void render(Entity entity)
-    {
-        GL11.glPushMatrix();
-
-        move();
-
-        //Actually render all the bend parts.
-        for (int i = 0; i < bendSplit; i++)
+    protected void createBendPart(GroupObject bendGroupObject, List<Vertex> nearVertices, List<Vertex> farVertices) {
+		bendParts.add(new BendPart_Animator(bendGroupObject, nearVertices, farVertices));
+    }
+    
+    @Override
+    public void renderBendPart(Entity entity, BendPart bendPart, int i) {
+        boolean mainHighlight = false;
+        boolean otherHighlight = false;
+    	if (parent.modelObj instanceof ModelObj_Animator)
         {
-            BendPartOld part = bendParts.get(i);
-            boolean mainHighlight = false;
-            boolean otherHighlight = false;
-            if (parent.modelObj instanceof ModelObj_Animator)
-            {
-                ModelObj_Animator parentModel = (ModelObj_Animator) parent.modelObj;
-                ModelObj_Animator childModel = (ModelObj_Animator) child.modelObj;
-                mainHighlight = i < bendSplit / 2 ? parentModel.isMainHighlight(parent) : childModel.isMainHighlight(child);
-                otherHighlight = i < bendSplit / 2 ? parentModel.isPartHighlighted(parent) : childModel.isPartHighlighted(child);
-            }
-            part.updateTextureCoordinates(entity, mainHighlight, otherHighlight, parent.modelObj);
-            part.render();
+            ModelObj_Animator parentModel = (ModelObj_Animator) parent.modelObj;
+            ModelObj_Animator childModel = (ModelObj_Animator) child.modelObj;
+            mainHighlight = i < bendSplit / 2 ? parentModel.isMainHighlight(parent) : childModel.isMainHighlight(child);
+            otherHighlight = i < bendSplit / 2 ? parentModel.isPartHighlighted(parent) : childModel.isPartHighlighted(child);
         }
-        GL11.glPopMatrix();
+    	bendPart.render(entity, mainHighlight, otherHighlight, parent.modelObj);        
     }
 }

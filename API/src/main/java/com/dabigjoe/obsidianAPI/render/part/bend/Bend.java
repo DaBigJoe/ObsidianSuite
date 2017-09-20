@@ -5,16 +5,16 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.dabigjoe.obsidianAPI.render.bend.BendHelper;
-import com.dabigjoe.obsidianAPI.render.bend.BezierCurve;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
 import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 
+import net.minecraft.entity.Entity;
+
 public class Bend {
 
     private Vertex centreOfBend;
-    private List<BendPart> bendParts;
+    protected List<BendPart> bendParts;
 	
     public final PartObj parent;
     public final PartObj child;
@@ -60,11 +60,15 @@ public class Bend {
     			farVertices.add(new Vertex(parentVertex.x + dx[j]*(i+1), parentVertex.y + dy[j]*(i+1), parentVertex.z + dz[j]*(i+1)));
     		}
     		
-    		bendParts.add(new BendPart(bendGroupObject, nearVertices, farVertices));
+    		createBendPart(bendGroupObject, nearVertices, farVertices);
     	}
     }
     
-    public void move()
+    protected void createBendPart(GroupObject bendGroupObject, List<Vertex> nearVertices, List<Vertex> farVertices) {
+		bendParts.add(new BendPart(bendGroupObject, nearVertices, farVertices));
+    }
+    
+    protected void move()
     {
         //Get all parents that need compensating for.
         List<PartObj> parents = new ArrayList<PartObj>();
@@ -80,7 +84,7 @@ public class Bend {
             q.move();
     }
     
-    public void render()
+    public void render(Entity entity)
     {
         GL11.glPushMatrix();
         move();
@@ -95,7 +99,7 @@ public class Bend {
     	for(int i = 0; i < bendSplit; i++) {
     		BendPart bendPart = bendParts.get(i); 
     		bendPart.update(curves, (float)i/(float)bendSplit, (float)(i+1)/(float)bendSplit);
-            bendPart.render();        
+    		renderBendPart(entity, bendPart, i);
     	}
     	
         for(int i = 0; i < childNearVertices.size(); i++) {
@@ -104,9 +108,18 @@ public class Bend {
         	parentNearVertices.get(i).setToOriginalValues();
         	parentFarVertices.get(i).setToOriginalValues();
         }
-        
-
+     
         GL11.glPopMatrix();
+    }
+    
+    /**
+     * Render a bend part
+     * @param entity - entity being rendered
+     * @param bendPart - part to render
+     * @param i - Index in bend
+     */
+    public void renderBendPart(Entity entity, BendPart bendPart, int i) {
+        bendPart.render(entity, false, false, parent.modelObj);        
     }
     
     private BezierCurve[] generateBezierCurves()

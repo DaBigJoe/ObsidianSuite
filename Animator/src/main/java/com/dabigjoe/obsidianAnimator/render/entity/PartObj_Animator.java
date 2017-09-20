@@ -98,18 +98,14 @@ public class PartObj_Animator extends PartObj
 		}
 	}
 
-	@Override
-	public void updateTextureCoordinates(Entity entity)
-	{	
-		updateTextureCoordinates(entity, ((ModelObj_Animator) modelObj).isMainHighlight(this), ((ModelObj_Animator) modelObj).isPartHighlighted(this), true);
-	}
-
 	/**
 	 * Change the texture coordinates and texture if the part is highlighted.
 	 */
 	@Override
-	public void updateTextureCoordinates(Entity entity, boolean mainHighlight, boolean otherHighlight, boolean bindTexture)
+	public void updateTextureCoordinates(Entity entity, boolean bindTexture)
 	{		
+		boolean mainHighlight = ((ModelObj_Animator) modelObj).isMainHighlight(this);
+		boolean otherHighlight = ((ModelObj_Animator) modelObj).isPartHighlighted(this);
 		boolean useHighlightCoords = true;
 		ResourceLocation texture;
 		if(mainHighlight)

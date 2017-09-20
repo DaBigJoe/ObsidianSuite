@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dabigjoe.obsidianAPI.render.ModelObj;
-import com.dabigjoe.obsidianAPI.render.bend.BendOld;
 import com.dabigjoe.obsidianAPI.render.part.Part;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
@@ -34,11 +33,19 @@ public class ModelObj_Animator extends ModelObj
 	{
 		return new PartObj_Animator(this, group);
 	}
-
+	
 	@Override
-	protected BendOld createBend(PartObj parent, PartObj child)
-	{
-		return new Bend_Animator(parent, child);
+	public void setBend(PartObj child, PartObj bend) {
+		if(!child.hasParent())
+			return;
+		
+		this.mainHighlight = null;
+		this.hightlightedParts.clear();
+		bend.updateTextureCoordinates(null, false);
+		PartObj parent = child.getParent();
+		parent.setBend(new Bend_Animator(parent, child, bend.groupObj));
+		removeParenting(bend);
+		parts.remove(bend);
 	}
 
 	//----------------------------------------------------------------
