@@ -235,7 +235,6 @@ public class PartObj extends PartRotation
 	/**
 	 * Adjust GL11 Matrix for all parents of this part.
 	 */
-	//TODO could this be done recursively?
 	public float[] postRenderParent()
 	{
 		//Generate a list of parents: {topParent, topParent - 1,..., parent}

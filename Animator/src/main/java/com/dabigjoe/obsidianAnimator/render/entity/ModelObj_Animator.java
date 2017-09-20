@@ -6,6 +6,7 @@ import java.util.List;
 import com.dabigjoe.obsidianAPI.render.ModelObj;
 import com.dabigjoe.obsidianAPI.render.part.Part;
 import com.dabigjoe.obsidianAPI.render.part.PartObj;
+import com.dabigjoe.obsidianAPI.render.part.bend.Bend;
 import com.dabigjoe.obsidianAPI.render.wavefront.GroupObject;
 import com.dabigjoe.obsidianAPI.render.wavefront.WavefrontObject;
 import com.dabigjoe.obsidianAnimator.render.Bend_Animator;
@@ -35,17 +36,11 @@ public class ModelObj_Animator extends ModelObj
 	}
 	
 	@Override
-	public void setBend(PartObj child, PartObj bend) {
-		if(!child.hasParent())
-			return;
-		
+	public Bend createBend(PartObj parent, PartObj child, PartObj bendPart) {
 		this.mainHighlight = null;
 		this.hightlightedParts.clear();
-		bend.updateTextureCoordinates(null, false);
-		PartObj parent = child.getParent();
-		parent.setBend(new Bend_Animator(parent, child, bend.groupObj));
-		removeParenting(bend);
-		parts.remove(bend);
+		bendPart.updateTextureCoordinates(null, false);
+		return new Bend_Animator(parent, child, bendPart.groupObj);
 	}
 
 	//----------------------------------------------------------------
@@ -72,26 +67,26 @@ public class ModelObj_Animator extends ModelObj
 				}
 			}
 		}
-//		for (BendOld bend : bends)
-//		{
-//			if (bend instanceof Bend_Animator)
-//			{
-//				Bend_Animator b = (Bend_Animator) bend;
-//
-//				Double d = b.testRayChild();
-//				if (d != null && (min == null || d < min))
-//				{
-//					closestPart = bend.child;
-//					min = d;
-//				}
-//				Double d2 = b.testRayParent();
-//				if (d2 != null && (min == null || d2 < min))
-//				{
-//					closestPart = bend.parent;
-//					min = d2;
-//				}
-//			}
-//		}
+		for (Bend bend : bends)
+		{
+			if (bend instanceof Bend_Animator)
+			{
+				Bend_Animator b = (Bend_Animator) bend;
+
+				Double d = b.testRayChild();
+				if (d != null && (min == null || d < min))
+				{
+					closestPart = bend.child;
+					min = d;
+				}
+				Double d2 = b.testRayParent();
+				if (d2 != null && (min == null || d2 < min))
+				{
+					closestPart = bend.parent;
+					min = d2;
+				}
+			}
+		}
 
 		return closestPart;
 	}

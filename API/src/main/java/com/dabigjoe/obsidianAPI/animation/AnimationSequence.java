@@ -247,7 +247,7 @@ public class AnimationSequence
 		return null;
 	}
 
-	//TODO AnimatinSequence - would it be better to store this rather than calculate it every time?
+	//TODO AnimationSequence - would it be better to store this rather than calculate it every time?
 	public int getTotalTime()
 	{
 		int max = 0;

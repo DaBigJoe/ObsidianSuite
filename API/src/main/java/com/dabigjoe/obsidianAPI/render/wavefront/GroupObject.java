@@ -109,7 +109,6 @@ public class GroupObject
 		
 		for(int i = 0; i < 4; i++) {
 			Face f = faces.get(i+1);			
-			System.out.println(f.faceNormal.x + " " + f.faceNormal.y + " " + f.faceNormal.z);
 			UVMap map = new UVMap(f);
 			mapsByNormal.put(f.faceNormal, map);
 		}
@@ -140,13 +139,10 @@ public class GroupObject
 				TextureCoordinate[] tcs = new TextureCoordinate[4];
 				for(int k = 0; k < 4; k++)
 					tcs[k] = map.getCoord(f.vertices[k], inverted);
-				System.out.println("H");
-				System.out.println(tcs);
 				if(inverted) {
 					TextureCoordinate[] temp = new TextureCoordinate[]{tcs[1], tcs[0], tcs[3], tcs[2]};
 					tcs = temp;
 				}
-				System.out.println(tcs);
 				rescaledTextCoords.add(tcs);
 			}
 			else {

@@ -39,6 +39,7 @@ public class ModelObj extends ModelBase {
 	public final WavefrontObject obj;
 	private ResourceLocation texture;
 	public List<Part> parts;
+	public List<Bend> bends;
 	public PartGroups partGroups;
 	private Map<PartObj, float[]> defaults;
 	private float modelScaleX, modelScaleY, modelScaleZ;
@@ -61,6 +62,7 @@ public class ModelObj extends ModelBase {
 		this.modelScaleX = modelScaleX;
 		this.modelScaleY = modelScaleY;
 		this.modelScaleZ = modelScaleZ;
+		this.bends = new ArrayList<Bend>();
 		defaults = Maps.newHashMap();
 		loadObj(obj);
 		init();
@@ -227,15 +229,20 @@ public class ModelObj extends ModelBase {
 		}
 	}
 	
-	public void setBend(PartObj child, PartObj bend) {
+	public void setBend(PartObj child, PartObj bendPart) {
 		if(!child.hasParent())
 			return;
 		
-		bend.updateTextureCoordinates(null, false);
 		PartObj parent = child.getParent();
-		parent.setBend(new Bend(parent, child, bend.groupObj));
-		removeParenting(bend);
-		parts.remove(bend);
+		Bend bend = createBend(parent, child, bendPart);
+		parent.setBend(bend);
+		removeParenting(bendPart);
+		parts.remove(bendPart);
+		bends.add(bend);
+	}
+	
+	public Bend createBend(PartObj parent, PartObj child, PartObj bendPart) {
+		return new Bend(parent, child, bendPart.groupObj);
 	}
 	
 	protected void removeParenting(PartObj child) {
@@ -350,14 +357,7 @@ public class ModelObj extends ModelBase {
 				if (!part.hasParent())
 					part.render(entity);
 			}
-			// TODO entity movement via PartEntityPos
-			// else if(p instanceof PartEntityPos)
-			// ((PartEntityPos) p).move(entity);
 		}
-
-//		for (Bend bend : bends) {
-//			bend.render(entity);
-//		}
 
 		GL11.glPopMatrix();
 	}
