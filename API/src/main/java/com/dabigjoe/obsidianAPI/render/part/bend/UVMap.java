@@ -84,10 +84,10 @@ public class UVMap {
 		this.topLeftTranslation = new Vec3d(tcTopLeft.u - p_rotated.x, tcTopLeft.v - p_rotated.y, 0);	
 		
 		//Setup origin
-		origin = transformPointToUVMap(faceTopLeft, false);
+		origin = transformPointToUVMap(faceTopLeft);
 		
 		//Transform face bottom right to work out horizontal and vertical scalars.
-		Vec3d faceBottomRightTransformed = transformPointToUVMap(faceBottomRight, false);
+		Vec3d faceBottomRightTransformed = transformPointToUVMap(faceBottomRight);
 		double dx = (faceBottomRightTransformed.x-origin.x);
 		double dy = (faceBottomRightTransformed.y-origin.y);
 		horizontalScalar = (tcBottomRight.u-origin.x)/(dx == 0 ? 1 : dx);
@@ -98,7 +98,7 @@ public class UVMap {
 	/**
 	 * Transform a point in the plane of the face onto the UV map.
 	 */
-	private Vec3d transformPointToUVMap(Vec3d p, boolean inverted) {
+	private Vec3d transformPointToUVMap(Vec3d p) {
 		Vec3d p1 = p.add(zAxisTranslation);
 		Vec3d p2 = rotatePoint(p1);
 		Vec3d p3 = p2.add(topLeftTranslation);
@@ -108,13 +108,13 @@ public class UVMap {
 	/**
 	 * Get the equivalent texture coordinate of a point on the UV map.
 	 */
-	private TextureCoordinate getCoord(Vec3d p, boolean inverted) {
-		Vec3d t = transformPointToUVMap(p, inverted);
+	private TextureCoordinate getCoord(Vec3d p) {
+		Vec3d t = transformPointToUVMap(p);
 		return new TextureCoordinate((float)(origin.x + horizontalScalar*(t.x-origin.x)), (float)(origin.y + verticalScalar*(t.y-origin.y)));
 	}
 	
-	public TextureCoordinate getCoord(Vertex v, boolean inverted) {
-		return getCoord(new Vec3d(v.x, v.y, v.z), inverted);
+	public TextureCoordinate getCoord(Vertex v) {
+		return getCoord(new Vec3d(v.x, v.y, v.z));
 	}
 	
 	/**
@@ -127,25 +127,5 @@ public class UVMap {
 				rotationMatrix[3]*p.x + rotationMatrix[4]*p.y + rotationMatrix[5]*p.z,
 				rotationMatrix[6]*p.x + rotationMatrix[7]*p.y + rotationMatrix[8]*p.z);
     }
-    
-	public static void main(String args[]) {
-		Vec3d faceTopLeft = new Vec3d(-0.1875, 0.5625, -0.1875);
-		TextureCoordinate tcTopLeft = new TextureCoordinate(0.5625F, 0.1875F);
-		Vec3d faceBottomRight = new Vec3d(0.1875, 0.5625, 0.1875);
-		TextureCoordinate tcBottomRight = new TextureCoordinate(0.65625F, 0.0F);
-		Vec3d normal = new Vec3d(0, 0, 1);
-		
-		UVMap map = new UVMap(faceTopLeft, tcTopLeft, faceBottomRight, tcBottomRight, normal);
-		
-		TextureCoordinate tc = map.getCoord(new Vec3d(-0.1875, 0.5625, -0.1875), false);
-		System.out.println(tc.u + " " + tc.v);
-		tc = map.getCoord(new Vec3d(0.1875, 0.5625, -0.1875), false);
-		System.out.println(tc.u + " " + tc.v);
-		tc = map.getCoord(new Vec3d(0.1875, 0.5625, 0.1875), false);
-		System.out.println(tc.u + " " + tc.v);
-		tc = map.getCoord(new Vec3d(-0.1875, 0.5625, 0.1875), false);
-		System.out.println(tc.u + " " + tc.v);
-	}
-	
 	
 }

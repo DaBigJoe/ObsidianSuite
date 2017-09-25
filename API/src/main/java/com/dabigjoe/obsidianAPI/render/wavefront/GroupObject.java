@@ -138,7 +138,7 @@ public class GroupObject
 			if(map != null) {
 				TextureCoordinate[] tcs = new TextureCoordinate[4];
 				for(int k = 0; k < 4; k++)
-					tcs[k] = map.getCoord(f.vertices[k], inverted);
+					tcs[k] = map.getCoord(f.vertices[k]);
 				if(inverted) {
 					TextureCoordinate[] temp = new TextureCoordinate[]{tcs[1], tcs[0], tcs[3], tcs[2]};
 					tcs = temp;
@@ -149,36 +149,7 @@ public class GroupObject
 				System.err.println("Could not reslace texture coordinates for normal " + f.faceNormal.x + " " + f.faceNormal.y + " " + f.faceNormal.z);
 				rescaledTextCoords.add(faces.get(i+1).textureCoordinates);
 			}
-			
-
-			
-			//For debugging incorrect texture coordinates.
-//			for(int j = 0; j < 4; j++) {
-//				TextureCoordinate tc = map.getCoord(f.vertices[j]);
-//				if(tc.u != f.textureCoordinates[j].u && tc.v != f.textureCoordinates[j].v) {
-//					System.out.println("Vertices");
-//					for(int k = 0; k < 4; k++)
-//						System.out.println(f.vertices[k].x + ", " + f.vertices[k].y + ", " + f.vertices[k].z);
-//					System.out.println("Actual tcs");
-//					for(int k = 0; k < 4; k++)
-//						System.out.println(f.textureCoordinates[k].u + ", " + f.textureCoordinates[k].v);
-//					System.out.println("Map tcs");
-//					for(int k = 0; k < 4; k++) {
-//						TextureCoordinate tc2 = map.getCoord(f.vertices[k]);
-//						System.out.println(tc2.u + ", " + tc2.v);
-//					}
-//					System.out.println("Normal: " + f.faceNormal.x + ", " + f.faceNormal.y + ", " + + f.faceNormal.z);
-//					break;
-//				}
-//				
-//			}
 		}
-//		
-//		rescaledTextCoords.clear();
-//		for(int i = 0; i < 4; i++) {
-//			Face f = faces.get(i+1);			
-//			rescaledTextCoords.add(f.textureCoordinates);
-//		}
 		
 		return rescaledTextCoords;
 	}
