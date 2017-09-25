@@ -201,10 +201,12 @@ public class PartObj extends PartRotation
 	{
 		GL11.glPushMatrix();
 		updateTextureCoordinates(entity, true);
-		move();
-		groupObj.render();
+		
 		if(bend != null)
 			bend.render(entity);
+		
+		move();
+		groupObj.render();
 		
 		//Do for children - rotation for parent compensated for!
         for (PartObj child : getChildren())

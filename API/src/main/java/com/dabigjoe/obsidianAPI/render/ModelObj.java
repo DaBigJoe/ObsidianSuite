@@ -235,7 +235,7 @@ public class ModelObj extends ModelBase {
 		
 		PartObj parent = child.getParent();
 		Bend bend = createBend(parent, child, bendPart);
-		parent.setBend(bend);
+		child.setBend(bend);
 		removeParenting(bendPart);
 		parts.remove(bendPart);
 		bends.add(bend);

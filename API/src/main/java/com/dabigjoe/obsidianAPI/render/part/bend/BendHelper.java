@@ -8,6 +8,12 @@ import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 public class BendHelper
 {
 
+	/**
+	 * Align one list of vertices with another
+	 * @param fixed Vertices to align to
+	 * @param vertices Vertices to align
+	 * @return List of aligned vertices. Given list is also changed.
+	 */
     public static List<Vertex> alignVertices(List<Vertex> fixed, List<Vertex> vertices)
     {
         List<Vertex> alignedVertices = new ArrayList<Vertex>();
@@ -16,6 +22,30 @@ public class BendHelper
         vertices.clear();
         vertices.addAll(alignedVertices);
         return alignedVertices;
+    }
+    
+    /**
+     * Order vertices so that they are in a 'square' order:
+     * 0---1
+     * |   |
+     * 3---2
+     * Changes given list and also returns new list.
+     */
+    public static List<Vertex> orderVertices(List<Vertex> vertices) {
+    	List<Vertex> orderedVertices = new ArrayList<Vertex>();
+    	List<Vertex> stillToOrder = new ArrayList<Vertex>();
+    	stillToOrder.addAll(vertices);
+    	Vertex ref = vertices.get(0);
+    	stillToOrder.remove(ref);
+    	orderedVertices.add(ref);
+    	while(!stillToOrder.isEmpty()) {
+        	ref = getClosestVertex(ref, stillToOrder);
+        	stillToOrder.remove(ref);
+        	orderedVertices.add(ref);
+    	} 
+        vertices.clear();
+        vertices.addAll(orderedVertices);
+    	return orderedVertices;
     }
 
     private static Vertex getClosestVertex(Vertex v, List<Vertex> vertices) {

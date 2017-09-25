@@ -34,6 +34,7 @@ public class Bend {
     	this.childFarVertices = child.groupObj.getNonIntersectingVertices(bendGroupObject);
     	this.bendParts = new ArrayList<BendPart>();   
     	
+    	BendHelper.orderVertices(parentFarVertices);
     	BendHelper.alignVertices(parentFarVertices, parentNearVertices);
     	BendHelper.alignVertices(parentFarVertices, childNearVertices);
     	BendHelper.alignVertices(parentFarVertices, childFarVertices);
@@ -95,6 +96,9 @@ public class Bend {
         	BendHelper.rotateVertex(childFarVertices.get(i), rotMat, centreOfBend);
         }
         BezierCurve[] curves = generateBezierCurves();	
+        
+        //for(BezierCurve curve : curves)
+        //	curve.render();
 
     	for(int i = 0; i < bendSplit; i++) {
     		BendPart bendPart = bendParts.get(i); 
