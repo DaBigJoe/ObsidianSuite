@@ -11,6 +11,7 @@ import com.dabigjoe.obsidianAPI.render.wavefront.Vertex;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 public class BendPart extends GroupObject {
 	
@@ -33,19 +34,20 @@ public class BendPart extends GroupObject {
 	}
 	
 	public void update(BezierCurve[] curves, float t1, float t2) {
-		//System.out.println(t1 + " " + t2);
 		this.faces.clear();
 		List<Vertex> nearVertices = generateVertices(curves, t1);
 		List<Vertex> farVertices = generateVertices(curves, t2);
+		List<Vertex> allVertices = new ArrayList<>();
+		allVertices.addAll(nearVertices);
+		allVertices.addAll(farVertices);
         for (int i = 0; i < 4; i++)
         {
             int j = i == 3 ? 0 : i + 1;
-
             Vertex vA = nearVertices.get(i);
             Vertex vB = nearVertices.get(j);
             Vertex vC = farVertices.get(j);
             Vertex vD = farVertices.get(i);
-            Face f = new Face();
+            Face f = new Face(getCentre(allVertices));
             f.vertices = new Vertex[] {vA, vB, vC, vD};
             f.faceNormal = f.calculateFaceNormal();
             f.textureCoordinates = faceTextureCoords.get(i);
@@ -66,6 +68,15 @@ public class BendPart extends GroupObject {
 		super.render();
 	}
     
-    
+    public Vec3d getCentre(List<Vertex> allVertices) {
+		double x=0, y=0, z=0;
+		for(Vertex v : allVertices) {
+			x += v.x;
+			y += v.y;
+			z += v.z;
+		}
+		double size = allVertices.size();
+		return new Vec3d(x/size, y/size, z/size);
+    }
 	
 }

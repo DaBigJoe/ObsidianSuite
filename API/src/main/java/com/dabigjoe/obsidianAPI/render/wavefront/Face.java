@@ -13,6 +13,11 @@ public class Face
     public Vertex[] vertexNormals;
     public Vertex faceNormal;
     public TextureCoordinate[] textureCoordinates;
+    public Vec3d objCentre;
+    
+    public Face(Vec3d objCentre) {
+    	this.objCentre = objCentre;
+    }
     
     @SideOnly(Side.CLIENT)
     public void render(BufferBuilder renderer) {
@@ -41,11 +46,17 @@ public class Face
     public Vertex calculateFaceNormal() {
         Vec3d v1 = new Vec3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
         Vec3d v2 = new Vec3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
-        Vec3d normalVector = null;
+        Vec3d normal = null;
 
-        normalVector = v1.crossProduct(v2).normalize();
+        normal = v1.crossProduct(v2).normalize();
+        
+        //Invert normal if pointing towards centre
+        double d = - normal.x*vertices[1].x - normal.y*vertices[1].y - normal.z*vertices[1].z;
+        double d1 = (normal.x*objCentre.x + normal.y*objCentre.y + normal.z*objCentre.z + d)/Math.sqrt(normal.x*normal.x + normal.y*normal.y + normal.z*normal.z);
+        //d1 < 0 if objcentre on same side of plane as normal -> inversion required
+        int inversion = d1 > 0 ? -1 : 1;
 
-        return new Vertex((float) normalVector.x, (float) normalVector.y, (float) normalVector.z);
+        return new Vertex((float)(inversion * normal.x), (float)(inversion * normal.y), (float)(inversion * normal.z));
     }
 
 }

@@ -117,7 +117,7 @@ public class WavefrontObject
                         currentGroupObject = new GroupObject("Default");
                     }
 
-                    Face face = parseFace(currentLine, lineCount);
+                    Face face = parseFace(currentLine, lineCount, currentGroupObject);
 
                     if (face != null)
                     {
@@ -367,13 +367,13 @@ public class WavefrontObject
         return textureCoordinate;
     }
 
-    private Face parseFace(String line, int lineCount) throws ModelFormatException
+    private Face parseFace(String line, int lineCount, GroupObject currentGroupObject) throws ModelFormatException
     {
         Face face = null;
 
         if (isValidFaceLine(line))
         {
-            face = new Face();
+            face = new Face(currentGroupObject.getObjCentre());
 
             String trimmedLine = line.substring(line.indexOf(" ") + 1);
             String[] tokens = trimmedLine.split(" ");

@@ -12,16 +12,15 @@ public class BendHelper
 	 * Align one list of vertices with another
 	 * @param fixed Vertices to align to
 	 * @param vertices Vertices to align
-	 * @return List of aligned vertices. Given list is also changed.
+	 * Changes argument list
 	 */
-    public static List<Vertex> alignVertices(List<Vertex> fixed, List<Vertex> vertices)
+    public static void alignVertices(List<Vertex> fixed, List<Vertex> vertices)
     {
         List<Vertex> alignedVertices = new ArrayList<Vertex>();
         for (Vertex v : fixed)
             alignedVertices.add(getClosestVertex(v, vertices));
         vertices.clear();
         vertices.addAll(alignedVertices);
-        return alignedVertices;
     }
     
     /**
@@ -29,9 +28,9 @@ public class BendHelper
      * 0---1
      * |   |
      * 3---2
-     * Changes given list and also returns new list.
+     * Changes argument list
      */
-    public static List<Vertex> orderVertices(List<Vertex> vertices) {
+    public static void orderVertices(List<Vertex> vertices) {
     	List<Vertex> orderedVertices = new ArrayList<Vertex>();
     	List<Vertex> stillToOrder = new ArrayList<Vertex>();
     	stillToOrder.addAll(vertices);
@@ -45,7 +44,6 @@ public class BendHelper
     	} 
         vertices.clear();
         vertices.addAll(orderedVertices);
-    	return orderedVertices;
     }
 
     private static Vertex getClosestVertex(Vertex v, List<Vertex> vertices) {

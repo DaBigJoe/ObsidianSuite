@@ -33,12 +33,12 @@ public class Bend {
     	this.childNearVertices = child.groupObj.getIntersectingVertices(bendGroupObject);
     	this.childFarVertices = child.groupObj.getNonIntersectingVertices(bendGroupObject);
     	this.bendParts = new ArrayList<BendPart>();   
-    	
+
     	BendHelper.orderVertices(parentFarVertices);
     	BendHelper.alignVertices(parentFarVertices, parentNearVertices);
     	BendHelper.alignVertices(parentFarVertices, childNearVertices);
     	BendHelper.alignVertices(parentFarVertices, childFarVertices);
-    	
+
     	initBendParts(bendGroupObject);
     }
     

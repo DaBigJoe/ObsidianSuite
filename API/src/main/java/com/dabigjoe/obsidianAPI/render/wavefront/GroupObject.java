@@ -10,6 +10,7 @@ import com.dabigjoe.obsidianAPI.render.part.bend.UVMap;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,6 +19,8 @@ public class GroupObject
     public String name;
     public ArrayList<Face> faces = new ArrayList<Face>();
     public int glDrawingMode;
+    //Caching of obj centre
+    private Vec3d objCentre;
 
     public GroupObject()
     {
@@ -58,6 +61,21 @@ public class GroupObject
         }
     }
     
+    public Vec3d getObjCentre() {
+    	if(objCentre == null) {
+    		double x=0, y=0, z=0;
+    		List<Vertex> allVertices = getAllVertices();
+    		for(Vertex v : allVertices) {
+    			x += v.x;
+    			y += v.y;
+    			z += v.z;
+    		}
+    		double size = allVertices.size();
+    		objCentre = new Vec3d(x/size, y/size, z/size);
+    	}
+    	return objCentre;
+    }
+    
     /**
      * Return the list of vertices in this group object that are
      * also in the given group object. 
@@ -73,7 +91,7 @@ public class GroupObject
         	}
     	}
     	return intersectingVertices;
-    }
+    }    
     
     /**
      * Return the list of vertices in this group object that are
@@ -82,7 +100,6 @@ public class GroupObject
     public List<Vertex> getNonIntersectingVertices(GroupObject obj) {
     	List<Vertex> nonIntersectingVertices = getAllVertices();
     	nonIntersectingVertices.removeAll(getIntersectingVertices(obj));
-    	System.out.println(nonIntersectingVertices.size());
     	return nonIntersectingVertices;
     }
     
@@ -120,7 +137,7 @@ public class GroupObject
             Vertex vB = nearVertices.get(j);
             Vertex vC = farVertices.get(j);
             Vertex vD = farVertices.get(i);
-            Face f = new Face();
+            Face f = new Face(this.getObjCentre());
             f.vertices = new Vertex[] {vA, vB, vC, vD};
             f.faceNormal = f.calculateFaceNormal();
 			
@@ -153,5 +170,6 @@ public class GroupObject
 		
 		return rescaledTextCoords;
 	}
+
     
 }
