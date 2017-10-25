@@ -42,18 +42,18 @@ public class AnimationParenting
 				NBTTagCompound parentCompound = new NBTTagCompound();
 				parentCompound.setString("Parent", part.getName());
 
+				//Parenting and bends
 				int i = 0;
 				for (PartObj child : children)
 				{
 					String name = child.getName();
-					if (child.hasBend())
-					{
-						name += "*";
-					}
 					parentCompound.setString("Child" + i, name);
+					if(child.hasBend())
+						parentCompound.setString("Bend" + i, child.getBend().getName());
 					i++;
 				}
 				
+				//Merging
 				for(int j = 0; j < mergeParts.size(); j++)
 				{
 					PartObj mergedPart = mergeParts.get(j);
@@ -77,22 +77,18 @@ public class AnimationParenting
 		{
 			NBTTagCompound parentCompound = parentNBTList.getCompoundTagAt(i);
 			PartObj parent = model.getPartObjFromName(parentCompound.getString("Parent"));
+			
+			//Parenting
 			int j = 0;
 			while (parentCompound.hasKey("Child" + j))
 			{
 				String name = parentCompound.getString("Child" + j);
-				boolean hasBend = false;
-				if (name.endsWith("*"))
-				{
-					name = name.substring(0, name.length() - 1);
-					hasBend = true;
-				}
 				PartObj child = model.getPartObjFromName(name);
-
 				model.setParent(child, parent);
 				j++;
 			}
 			
+			//Merging
 			j = 0;
 			while (parentCompound.hasKey("Merged" + j))
 			{
@@ -101,6 +97,30 @@ public class AnimationParenting
 				model.addMerge(parent, mergedPart);
 				j++;
 			}	
+		}
+	}
+	
+	public static void loadBendData(NBTTagCompound compound, ModelObj model)
+	{
+		NBTTagList parentNBTList = compound.getTagList("Parenting", 10);
+
+		for (int i = 0; i < parentNBTList.tagCount(); i++)
+		{
+			NBTTagCompound parentCompound = parentNBTList.getCompoundTagAt(i);
+			
+			//Bending
+			int j = 0;
+			while (parentCompound.hasKey("Child" + j))
+			{
+				String name = parentCompound.getString("Child" + j);
+				PartObj child = model.getPartObjFromName(name);
+				if(parentCompound.hasKey("Bend" + j)) {
+					String bendName = parentCompound.getString("Bend" + j);
+					PartObj bendPart = model.getPartObjFromName(bendName);
+					model.setBend(child, bendPart);
+				}
+				j++;
+			}
 		}
 	}
 }

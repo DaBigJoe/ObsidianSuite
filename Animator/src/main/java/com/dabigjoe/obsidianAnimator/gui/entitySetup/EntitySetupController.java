@@ -39,6 +39,9 @@ public class EntitySetupController
 
 	public void attemptParent(PartObj parent, PartObj child)
 	{
+		if(parent == null || child == null)
+			return;
+		
 		if(parent.getName().equals(child.getName()))
 		{
 			JOptionPane.showMessageDialog(frame, "Cannot parent a part to itself.", "Parenting issue", JOptionPane.ERROR_MESSAGE);

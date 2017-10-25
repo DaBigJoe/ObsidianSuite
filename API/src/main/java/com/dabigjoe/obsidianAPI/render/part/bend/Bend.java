@@ -21,10 +21,13 @@ public class Bend {
     
     private List<Vertex> parentNearVertices, parentFarVertices, childNearVertices, childFarVertices;
     
+    private String name;
+    
     //The number of bend parents the bend is made up of.
     protected static final int bendSplit = 10;
     
-    public Bend(PartObj parent, PartObj child, GroupObject bendGroupObject) {
+    public Bend(String name, PartObj parent, PartObj child, GroupObject bendGroupObject) {
+    	this.name = name;
     	this.parent = parent;
     	this.child = child;
         this.centreOfBend = new Vertex(-child.getRotationPoint(0), -child.getRotationPoint(1), -child.getRotationPoint(2));
@@ -63,6 +66,10 @@ public class Bend {
     		
     		createBendPart(bendGroupObject, nearVertices, farVertices);
     	}
+    }
+    
+    public String getName() {
+    	return name;
     }
     
     protected void createBendPart(GroupObject bendGroupObject, List<Vertex> nearVertices, List<Vertex> farVertices) {

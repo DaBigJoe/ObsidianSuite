@@ -40,7 +40,7 @@ public class ModelObj_Animator extends ModelObj
 		this.mainHighlight = null;
 		this.hightlightedParts.clear();
 		bendPart.updateTextureCoordinates(null, false);
-		return new Bend_Animator(parent, child, bendPart.groupObj);
+		return new Bend_Animator(bendPart.getName(), parent, child, bendPart.groupObj);
 	}
 
 	//----------------------------------------------------------------

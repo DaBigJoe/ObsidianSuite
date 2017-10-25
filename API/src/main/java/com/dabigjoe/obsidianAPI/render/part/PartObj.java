@@ -83,6 +83,10 @@ public class PartObj extends PartRotation
 	{
 		return bend != null;
 	}
+	
+	public Bend getBend() {
+		return bend;
+	}
 
 	public void removeBend()
 	{

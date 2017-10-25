@@ -17,9 +17,9 @@ import net.minecraft.entity.Entity;
 
 public class Bend_Animator extends Bend
 {
-    public Bend_Animator(PartObj parent, PartObj child, GroupObject bendGroupObject)
+    public Bend_Animator(String name, PartObj parent, PartObj child, GroupObject bendGroupObject)
     {
-        super(parent, child, bendGroupObject);
+        super(name, parent, child, bendGroupObject);
     }
 
     private List<BendPart> getParentBendParts()

@@ -82,6 +82,7 @@ public class ModelObj extends ModelBase {
 			AnimationParenting.loadData(nbt.getCompoundTag("Parenting"), this);
 			partGroups.loadData(nbt.getCompoundTag("Groups"), this);
 			PartData.fromNBT(nbt.getCompoundTag("Setup"), this);
+			AnimationParenting.loadBendData(nbt.getCompoundTag("Parenting"), this);
 			runMerge();
 		} catch (Exception e) {
 			System.err.println("Unable to load model nbt for " + entityName);
@@ -242,7 +243,7 @@ public class ModelObj extends ModelBase {
 	}
 	
 	public Bend createBend(PartObj parent, PartObj child, PartObj bendPart) {
-		return new Bend(parent, child, bendPart.groupObj);
+		return new Bend(bendPart.getName(), parent, child, bendPart.groupObj);
 	}
 	
 	protected void removeParenting(PartObj child) {
