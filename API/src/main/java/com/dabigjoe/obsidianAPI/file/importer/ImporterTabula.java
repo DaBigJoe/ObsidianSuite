@@ -112,6 +112,20 @@ public class ImporterTabula implements ModelImporter {
 		}
 		model.runMerge();
 		
+		//Bending
+		for(PartObj part : model.getPartObjs()) {
+			if(part.getName().endsWith("_b") && part.hasParent()) {
+				try {
+					PartObj child = model.getPartObjFromName(part.getName().substring(0, part.getName().length() - 2));
+					model.setBend(child, part);
+				}
+				catch(Exception e) {
+					System.out.println("Unable to automatically load bending for " + part.getName());
+				}
+			}
+		}
+
+		
 		return model;
 	}
 	
